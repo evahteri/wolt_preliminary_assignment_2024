@@ -3,3 +3,6 @@ __pycache__
 .pytest_cache
 delivery.rest
 delivery_rush_hour.rest
+.coverage
+htmlcov
+.mypy_cache
