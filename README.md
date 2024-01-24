@@ -2,15 +2,27 @@
 
 ## Delivery Fee Calculator API
 
-Add general info here
+### How to use
 
-### Install
+Quick start: install needed dependencies and run the server with a provided script: 
+
+```bash start.sh```
+
+Or manually:
 
 - Install requirements by runnin ```pip install -r requirements.txt```
 
-### How to use
-
 - Run the server in src folder with ```uvicorn main:app```
+
+The API is now open at http://localhost:8000/
+
+Only POST requests are allowed.
+
+### Testing
+
+Run tests with ```bash test.sh```
+
+### Configuration
 
 - You can configure the fee calculations by changing the config.json file:
 
@@ -33,3 +45,4 @@ rush_hours: The rush hours for the additional fee. Weekdays are 0-6, 0 is monday
     end: 19:00:00
     fee: 1.2
 ```
+The name of the configuration file can also bee altered.
