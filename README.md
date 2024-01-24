@@ -38,7 +38,7 @@ minimum_delivery_distance: The minimum delivery fee as meters.
 delivery_fee_for_the_first_km: The delivery fee for the first km.
 additional_distance_after_first_km: The distance the courier has to travel after the first km, delivery_fee_for_additional_distance value is added for every additional distance.
 delivery_fee_for_additional_distance: This is added to the delivery fee for every configured additional distance.
-minimun_delivery_fee: The minimum delivery fee.
+minimum_delivery_fee: The minimum delivery fee.
 bulk_amount: Amount of products that is considered bulk.
 bulk_charge_fee: This is added if the order is considered bulk.
 product_amount_for_surcharge: Every product after this number has a surcharge fee.

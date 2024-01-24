@@ -1,4 +1,5 @@
 import json
+import math
 
 class FeeCalculator:
         """This class makes all the calculations related to the fee.
@@ -22,7 +23,7 @@ class FeeCalculator:
             """
             
             self._minimum_cart_value(response_object)
-            self._delivery_distance_fee()
+            self._delivery_distance_fee(response_object)
             self._number_of_items()
             self._rush_hour_fee()
     
@@ -37,9 +38,21 @@ class FeeCalculator:
                 surcharge = min_cart_value - response_object.cart_value
                 self._fee += surcharge
 
-        def _delivery_distance_fee(self):
-            #TODO
-            pass
+        def _delivery_distance_fee(self, response_object):
+            """This function counts the extra fee from distance and adds it to the total fee.
+            """
+
+            if response_object.delivery_distance < self._configuration["minimum_delivery_distance"]:
+                self._fee += self._configuration["minimum_delivery_fee"] # Adding the minimum fee.
+            
+            if response_object.delivery_distance >= self._configuration["minimum_delivery_distance"]:
+                self._fee += self._configuration["delivery_fee_for_the_first_km"] # Adding the first km fee.
+            
+            if response_object.delivery_distance > 1000: # Extra charge after first km.
+                extra_charge_multiplier = math.ceil((response_object.delivery_distance - 1000 )/ self._configuration["additional_distance_after_first_km"])
+                # Extra charge amount is counted by deducting the first 1000 metres from the distance, then dividing it with the additional distance and rounding it upwards.
+                self._fee += extra_charge_multiplier * self._configuration["delivery_fee_for_additional_distance"] # Total extra charge is multiplier times the fee.
+            
 
         def _number_of_items(self):
             #TODO

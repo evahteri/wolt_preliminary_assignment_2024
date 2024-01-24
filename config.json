@@ -4,7 +4,7 @@
   "delivery_fee_for_the_first_km": 200,
   "additional_distance_after_first_km": 500,
   "delivery_fee_for_additional_distance": 100,
-  "minimun_delivery_fee": 100,
+  "minimum_delivery_fee": 100,
   "bulk_amount": 12,
   "bulk_charge_fee": 120,
   "product_amount_for_surcharge": 4,
