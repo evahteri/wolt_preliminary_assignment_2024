@@ -24,7 +24,7 @@ class FeeCalculator:
             
             self._minimum_cart_value(response_object)
             self._delivery_distance_fee(response_object)
-            self._number_of_items()
+            self._number_of_items(response_object)
             self._rush_hour_fee()
     
             return self._fee
@@ -54,9 +54,17 @@ class FeeCalculator:
                 self._fee += extra_charge_multiplier * self._configuration["delivery_fee_for_additional_distance"] # Total extra charge is multiplier times the fee.
             
 
-        def _number_of_items(self):
-            #TODO
-            pass
+        def _number_of_items(self, response_object):
+            """This function counts the fee for larger orders. No charge is added if there are only "product_amount_for_surcharge" items or less.
+            """
+            if response_object.number_of_items > self._configuration["product_amount_for_surcharge"]:
+                # Count how many extra items there are.
+                extra_items = response_object.number_of_items - self._configuration["product_amount_for_surcharge"]
+                # Multiply the amount by the surcharge fee and add it to the total fee.
+                self._fee += extra_items * self._configuration["surcharge_fee"]
+            # If the order is considered bulk, add the bulk fee.
+            if response_object.number_of_items > self._configuration["bulk_amount"]:
+                self._fee += self._configuration["bulk_charge_fee"]
 
         def _rush_hour_fee(self):
             #TODO
