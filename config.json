@@ -13,9 +13,9 @@
   "max_cart_value_for_free_delivery": 20000,
   "rush_hours": [
     {
-      "day": 5,
-      "start": "15:00",
-      "end": "19:00",
+      "day": 4,
+      "start": "15:00:00",
+      "end": "19:00:00",
       "fee": 1.2
     }
   ]

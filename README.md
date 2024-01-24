@@ -45,7 +45,7 @@ product_amount_for_surcharge: Every product after this number has a surcharge fe
 surcharge_fee: This is added for every product after product_amount_for_surcharge.
 max_delivery_fee: The maximum delivery fee.
 max_cart_value_for_free_delivery: The maximum cart value for free delivery.
-rush_hours: The rush hours for the additional fee. Weekdays are 1-7, 1 is monday, 7 is sunday. Start and End times as UTC times, fee is a multiplier.
+rush_hours: The rush hours for the additional fee. Weekdays are 0-6, 0 is monday, 6 is sunday. Start and End times as UTC times, fee is a multiplier.
   - day: 5
     start: 15:00
     end: 19:00

@@ -1,19 +1,14 @@
-import json
 import math
+from datetime import datetime
+from dateutil.parser import parse
 
 class FeeCalculator:
         """This class makes all the calculations related to the fee.
     """
 
-        def __init__(self, conf_filename):
-            self._conf_filename = conf_filename
-            self._configuration = self.__config_parser__()
+        def __init__(self, configuration):
+            self._configuration = configuration
             self._fee = 0
-
-        def __config_parser__(self):
-            with open(f"../{self._conf_filename}", "r") as file:
-                data = json.load(file)
-            return data
 
         def calculate_fee(self, response_object):
             """Main function to calculate the fee for the delivery.
@@ -25,7 +20,7 @@ class FeeCalculator:
             self._minimum_cart_value(response_object)
             self._delivery_distance_fee(response_object)
             self._number_of_items(response_object)
-            self._rush_hour_fee()
+            self._rush_hour_fee(response_object)
     
             return self._fee
 
@@ -66,6 +61,13 @@ class FeeCalculator:
             if response_object.number_of_items > self._configuration["bulk_amount"]:
                 self._fee += self._configuration["bulk_charge_fee"]
 
-        def _rush_hour_fee(self):
-            #TODO
-            pass
+        def _rush_hour_fee(self, response_object):
+            parsed = parse(response_object.time) # Get the time as datetime object from string
+            time_of_day = parsed.time()
+            for rush_time in self._configuration["rush_hours"]:
+                if parsed.weekday() == rush_time["day"]:
+                    time_object_start = datetime.strptime(rush_time["start"], "%H:%M:%S") # Convert string into datetime objects
+                    time_object_end = datetime.strptime(rush_time["end"], "%H:%M:%S")
+                    if time_of_day >= time_object_start.time() and time_of_day <= time_object_end.time():
+                        self._fee = self._fee * rush_time["fee"] # Multiply the fee with the chosen rush time fee
+                
