@@ -21,6 +21,10 @@ class FeeCalculator:
             self._delivery_distance_fee(response_object)
             self._number_of_items(response_object)
             self._rush_hour_fee(response_object)
+            if self._fee > self._configuration["max_delivery_fee"]: # Making sure the max delivery fee is not crossed.
+                self._fee = self._configuration["max_delivery_fee"]
+            if response_object.cart_value >= self._configuration["max_cart_value_for_free_delivery"]: # Free delivery if certain threshold is passed.
+                self._fee = 0
     
             return self._fee
 
