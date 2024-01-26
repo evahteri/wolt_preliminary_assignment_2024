@@ -14,7 +14,9 @@ Development practices used:
 
 - Documentation: Docstring and comments are used when needed and code is written with readability in mind.
 
-- Ease of use: Scripts for both starting the app and running automated tests 
+- Ease of use: Scripts for both starting the app and running automated tests.
+
+- Github workflow: On every push, tests are run to check health of the application.
 
 ### How to use
 
@@ -33,6 +35,8 @@ The API is now open at http://localhost:8000/
 ### Testing
 
 Run tests with ```test.sh```
+
+This will generate a coverage report as well.
 
 ### Configuration
 
