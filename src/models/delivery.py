@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class Delivery(BaseModel):
     """This class is used validate the request body.
     """
