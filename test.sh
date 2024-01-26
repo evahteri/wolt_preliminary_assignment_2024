@@ -2,14 +2,12 @@
 
 echo "Running tests..."
 
-cd src/
-
-pytest tests/
+pytest src/tests/
 
 echo "Running coverage..."
 
-coverage run --branch -m pytest
+coverage run --branch -m pytest src
 
 echo "Generating coverage report..."
 
-coverage report
+coverage report -m
