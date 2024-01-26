@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from main import app
 
 
-class TestFeeCalculator(unittest.TestCase):
+class TestApi(unittest.TestCase):
     def setUp(self):
         self.client = TestClient(app)
 
