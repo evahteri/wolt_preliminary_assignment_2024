@@ -145,7 +145,7 @@ class TestFeeCalculator(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"delivery_fee": 710})
 
-    def test_non_valid_data(self):
+    def test_non_valid_data_error(self):
         """When non-valid data is entered and it cannot be processed, API should return 422 error
         """
         example_delivery = {"cart_value": "value", "delivery_distance": 2235,

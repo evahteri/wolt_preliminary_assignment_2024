@@ -1,6 +1,7 @@
 import math
 from dateutil.parser import parse
 import config
+from models.delivery import Delivery
 
 
 class FeeCalculator:
@@ -10,7 +11,7 @@ class FeeCalculator:
     def __init__(self):
         self._fee = 0
 
-    def calculate_fee(self, response_object):
+    def calculate_fee(self, response_object: Delivery) -> int:
         """Main function to calculate the fee for the delivery.
 
         Returns:
@@ -28,9 +29,9 @@ class FeeCalculator:
         if response_object.cart_value >= config.MIN_CART_VALUE_FOR_FREE_DELIVERY:
             self._fee = 0
 
-        return self._fee
+        return int(self._fee)
 
-    def _minimum_cart_value(self, response_object):
+    def _minimum_cart_value(self, response_object: Delivery):
         """This functions adds surcharge to the fee, if cart value is under
             the minimum cart value.
         """
@@ -39,7 +40,7 @@ class FeeCalculator:
             surcharge = min_cart_value - response_object.cart_value
             self._fee += surcharge
 
-    def _delivery_distance_fee(self, response_object):
+    def _delivery_distance_fee(self, response_object: Delivery):
         """This function counts the extra fee from distance and adds it to the total fee.
         """
 
@@ -58,8 +59,9 @@ class FeeCalculator:
             self._fee += extra_charge_multiplier * \
                 config.DELIVERY_FEE_FOR_ADDITIONAL_DISTANCE
 
-    def _number_of_items(self, response_object):
-        """This function counts the fee for larger orders. No charge is added if there are only PRODUCT_AMOUNT_FOR_SURCHARGE items or less.
+    def _number_of_items(self, response_object: Delivery):
+        """This function counts the fee for larger orders. No charge is added 
+        if there are only PRODUCT_AMOUNT_FOR_SURCHARGE items or less.
         """
         if response_object.number_of_items > config.PRODUCT_AMOUNT_FOR_SURCHARGE:
             # Count how many extra items there are.
@@ -71,7 +73,7 @@ class FeeCalculator:
         if response_object.number_of_items > config.BULK_AMOUNT:
             self._fee += config.BULK_CHARGE_FEE
 
-    def _rush_hour_fee(self, response_object):
+    def _rush_hour_fee(self, response_object: Delivery):
         # Get the time as datetime object from string
         parsed = parse(response_object.time)
         time_of_day = parsed.time()

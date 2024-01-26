@@ -1,5 +1,3 @@
-import json
-from typing import Any
 from fastapi import FastAPI
 from models.delivery import Delivery
 from services.fee_calculator import FeeCalculator
