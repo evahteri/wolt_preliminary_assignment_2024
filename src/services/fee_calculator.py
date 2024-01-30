@@ -17,37 +17,47 @@ class FeeCalculator:
         else:
             self.config = config
 
-    def calculate_fee(self, response_object: Delivery) -> int:
+    def calculate_total_delivery_fee(self, response_object: Delivery) -> int:
         """Main function to calculate the fee for the delivery.
 
         Returns:
             integer: The fee in cents
         """
 
-        self._fee += self.minimum_cart_value(cart_value=response_object.cart_value, min_cart_value=self.config.MINIMUM_CART_VALUE)
-        self._fee += self.delivery_distance_fee(delivery_distance=response_object.delivery_distance,
+        self._fee += self.calculate_minimum_cart_value_surcharge(cart_value=response_object.cart_value, min_cart_value=self.config.MINIMUM_CART_VALUE)
+        self._fee += self.calculate_delivery_distance_surcharge(delivery_distance=response_object.delivery_distance,
                                                 minimum_delivery_fee=self.config.MINIMUM_DELIVERY_FEE, 
                                                 minimum_delivery_distance=self.config.MINIMUM_DELIVERY_DISTANCE, 
                                                 delivery_fee_for_additional_distance=self.config.DELIVERY_FEE_FOR_ADDITIONAL_DISTANCE,
                                                 delivery_fee_for_the_first_km=self.config.DELIVERY_FEE_FOR_THE_FIRST_KM,
                                                 additional_distance_after_first_km=self.config.ADDITIONAL_DISTANCE_AFTER_FIRST_KM)
-        self._fee += self.number_of_items_fee(items_amount=response_object.number_of_items,
+        self._fee += self.calculate_number_of_items_surcharge(items_amount=response_object.number_of_items,
                                           product_amount_for_surcharge=self.config.PRODUCT_AMOUNT_FOR_SURCHARGE,
                                           surcharge_fee=self.config.SURCHARGE_FEE,
                                           bulk_amount=self.config.BULK_AMOUNT,
                                           bulk_charge_fee=self.config.BULK_CHARGE_FEE
                                           )
-        self._fee = self._fee * self.rush_hour_fee(time=response_object.time, rush_hours=self.config.RUSH_HOURS)
-        # Making sure the max delivery fee is not crossed.
-        if self._fee > self.config.MAX_DELIVERY_FEE:
-            self._fee = self.config.MAX_DELIVERY_FEE
-        # Free delivery if certain threshold is passed.
-        if response_object.cart_value >= self.config.MIN_CART_VALUE_FOR_FREE_DELIVERY:
+        self._fee = self._fee * self.calculate_rush_hour_surcharge_multiplier(time=response_object.time, rush_hours=self.config.RUSH_HOURS)
+        self._fee = self.check_max_total_delivery_fee(total_delivery_fee=self._fee, max_total_delivery_fee=self.config.MAX_DELIVERY_FEE)
+        if self.check_free_total_delivery_fee(cart_value=response_object.cart_value, 
+                                              min_cart_value_for_free_delivery=self.config.MIN_CART_VALUE_FOR_FREE_DELIVERY):
             self._fee = 0
 
         return int(self._fee)
 
-    def minimum_cart_value(self, cart_value: int, min_cart_value: int) -> int:
+    def check_max_total_delivery_fee(self, total_delivery_fee:int, max_total_delivery_fee:int) -> int:
+        """Makes sure the max fee is not crossed.
+        """
+        return int(min(total_delivery_fee, max_total_delivery_fee))
+
+    def check_free_total_delivery_fee(self, cart_value:int, min_cart_value_for_free_delivery:int) -> bool:
+        """Checks if the cart value is over the minimum for free delivery.
+        """
+        if cart_value >= min_cart_value_for_free_delivery:
+            return True
+        return False
+
+    def calculate_minimum_cart_value_surcharge(self, cart_value: int, min_cart_value: int) -> int:
         """This functions adds surcharge to the fee, if cart value is under
             the minimum cart value.
         """
@@ -55,10 +65,8 @@ class FeeCalculator:
         if cart_value < min_cart_value:
             surcharge = min_cart_value - cart_value
         return int(surcharge)
-            
-            
 
-    def delivery_distance_fee(self, delivery_distance: int, 
+    def calculate_delivery_distance_surcharge(self, delivery_distance: int, 
                               minimum_delivery_distance: int,
                               minimum_delivery_fee: int,
                               delivery_fee_for_the_first_km: int,
@@ -83,7 +91,7 @@ class FeeCalculator:
                 delivery_fee_for_additional_distance
         return int(fee)
 
-    def number_of_items_fee(self, items_amount: int, 
+    def calculate_number_of_items_surcharge(self, items_amount: int, 
                         product_amount_for_surcharge: int,
                         surcharge_fee: int,
                         bulk_amount: int,
@@ -103,7 +111,7 @@ class FeeCalculator:
             fee += bulk_charge_fee
         return int(fee)
 
-    def rush_hour_fee(self, time: str, rush_hours: config.RushHours) -> float:
+    def calculate_rush_hour_surcharge_multiplier(self, time: str, rush_hours: config.RushHours) -> float:
         multiplier = 1
         parsed = parse(time)
         time_of_day = parsed.time()

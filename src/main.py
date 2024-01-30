@@ -12,6 +12,6 @@ def index(delivery: Delivery) -> Fee:
     Returns:
         JSON: JSON object with the delivery fee
     """
-    delivery_fee = FeeCalculator().calculate_fee(response_object=delivery)
+    delivery_fee = FeeCalculator().calculate_total_delivery_fee(response_object=delivery)
 
     return Fee(delivery_fee=delivery_fee)
