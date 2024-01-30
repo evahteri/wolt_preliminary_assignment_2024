@@ -19,6 +19,11 @@ class TestApi(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"delivery_fee": 710})
 
+class TestApiRequests(unittest.TestCase):
+    def setUp(self):
+        settings.ENVIRONMENT = 'test'
+        self.client = TestClient(app)
+
     def test_get_request(self):
         """GET request should not be allowed and the response status code should be 405.
         """
@@ -30,6 +35,35 @@ class TestApi(unittest.TestCase):
         """
         response = self.client.put("/")
         self.assertEqual(response.status_code, 405)
+    
+    def test_head_request(self):
+        """HEAD request should not be allowed and the response status code should be 405.
+        """
+        response = self.client.head("/")
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete_request(self):
+        """DELETE request should not be allowed and the response status code should be 405.
+        """
+        response = self.client.delete("/")
+        self.assertEqual(response.status_code, 405)
+
+    def test_options_request(self):
+        """OPTIONS request should not be allowed and the response status code should be 405.
+        """
+        response = self.client.options("/")
+        self.assertEqual(response.status_code, 405)
+
+    def test_patch_request(self):
+        """PATCH request should not be allowed and the response status code should be 405.
+        """
+        response = self.client.patch("/")
+        self.assertEqual(response.status_code, 405)
+
+class TestApiCartValueValidation(unittest.TestCase):
+    def setUp(self):
+        settings.ENVIRONMENT = 'test'
+        self.client = TestClient(app)
 
     def test_non_valid_data_error_cart_value_str(self):
         """When non-valid data is entered and it cannot be processed, 
@@ -40,6 +74,11 @@ class TestApi(unittest.TestCase):
         response = self.client.post("/", json=example_delivery)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), "Cart value must be a positive integer.")
+
+class TestApiNumberOfItemsValidation(unittest.TestCase):
+    def setUp(self):
+        settings.ENVIRONMENT = 'test'
+        self.client = TestClient(app)
 
     def test_non_valid_data_error_number_of_items_str(self):
         """When non-valid data is entered and it cannot be processed, 
@@ -70,6 +109,11 @@ class TestApi(unittest.TestCase):
         response = self.client.post("/", json=example_delivery)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), "Number of items must be an integer with a value over 1.")
+
+class TestApiTimeValidation(unittest.TestCase):
+    def setUp(self):
+        settings.ENVIRONMENT = 'test'
+        self.client = TestClient(app)
 
     def test_non_valid_data_error_time_not_string(self):
         """When non-valid data is entered and it cannot be processed, 
