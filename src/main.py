@@ -5,7 +5,6 @@ from models.fee import Fee
 
 app = FastAPI()
 
-
 @app.post("/", response_model=Fee)
 def index(delivery: Delivery) -> Fee:
     """Endpoint to get the delivery fee

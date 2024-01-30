@@ -1,7 +1,9 @@
 import math
 from dateutil.parser import parse
 import config
+import test_config
 from models.delivery import Delivery
+from settings import settings
 
 
 class FeeCalculator:
@@ -10,6 +12,10 @@ class FeeCalculator:
 
     def __init__(self):
         self._fee = 0
+        if settings.ENVIRONMENT == 'test':
+            self.config = test_config
+        else:
+            self.config = config
 
     def calculate_fee(self, response_object: Delivery) -> int:
         """Main function to calculate the fee for the delivery.
@@ -18,25 +24,25 @@ class FeeCalculator:
             integer: The fee in cents
         """
 
-        self._fee += self.minimum_cart_value(cart_value=response_object.cart_value, min_cart_value=config.MINIMUM_CART_VALUE)
+        self._fee += self.minimum_cart_value(cart_value=response_object.cart_value, min_cart_value=self.config.MINIMUM_CART_VALUE)
         self._fee += self.delivery_distance_fee(delivery_distance=response_object.delivery_distance,
-                                                minimum_delivery_fee=config.MINIMUM_DELIVERY_FEE, 
-                                                minimum_delivery_distance=config.MINIMUM_DELIVERY_DISTANCE, 
-                                                delivery_fee_for_additional_distance=config.DELIVERY_FEE_FOR_ADDITIONAL_DISTANCE,
-                                                delivery_fee_for_the_first_km=config.DELIVERY_FEE_FOR_THE_FIRST_KM,
-                                                additional_distance_after_first_km=config.ADDITIONAL_DISTANCE_AFTER_FIRST_KM)
+                                                minimum_delivery_fee=self.config.MINIMUM_DELIVERY_FEE, 
+                                                minimum_delivery_distance=self.config.MINIMUM_DELIVERY_DISTANCE, 
+                                                delivery_fee_for_additional_distance=self.config.DELIVERY_FEE_FOR_ADDITIONAL_DISTANCE,
+                                                delivery_fee_for_the_first_km=self.config.DELIVERY_FEE_FOR_THE_FIRST_KM,
+                                                additional_distance_after_first_km=self.config.ADDITIONAL_DISTANCE_AFTER_FIRST_KM)
         self._fee += self.number_of_items_fee(items_amount=response_object.number_of_items,
-                                          product_amount_for_surcharge=config.PRODUCT_AMOUNT_FOR_SURCHARGE,
-                                          surcharge_fee=config.SURCHARGE_FEE,
-                                          bulk_amount=config.BULK_AMOUNT,
-                                          bulk_charge_fee=config.BULK_CHARGE_FEE
+                                          product_amount_for_surcharge=self.config.PRODUCT_AMOUNT_FOR_SURCHARGE,
+                                          surcharge_fee=self.config.SURCHARGE_FEE,
+                                          bulk_amount=self.config.BULK_AMOUNT,
+                                          bulk_charge_fee=self.config.BULK_CHARGE_FEE
                                           )
-        self._fee = self._fee * self.rush_hour_fee(time=response_object.time, rush_hours=config.RUSH_HOURS)
+        self._fee = self._fee * self.rush_hour_fee(time=response_object.time, rush_hours=self.config.RUSH_HOURS)
         # Making sure the max delivery fee is not crossed.
-        if self._fee > config.MAX_DELIVERY_FEE:
-            self._fee = config.MAX_DELIVERY_FEE
+        if self._fee > self.config.MAX_DELIVERY_FEE:
+            self._fee = self.config.MAX_DELIVERY_FEE
         # Free delivery if certain threshold is passed.
-        if response_object.cart_value >= config.MIN_CART_VALUE_FOR_FREE_DELIVERY:
+        if response_object.cart_value >= self.config.MIN_CART_VALUE_FOR_FREE_DELIVERY:
             self._fee = 0
 
         return int(self._fee)
@@ -46,7 +52,7 @@ class FeeCalculator:
             the minimum cart value.
         """
         surcharge = 0
-        min_cart_value = config.MINIMUM_CART_VALUE
+        min_cart_value = self.config.MINIMUM_CART_VALUE
         if cart_value < min_cart_value:
             surcharge = min_cart_value - cart_value
         return int(surcharge)
