@@ -52,7 +52,6 @@ class FeeCalculator:
             the minimum cart value.
         """
         surcharge = 0
-        min_cart_value = self.config.MINIMUM_CART_VALUE
         if cart_value < min_cart_value:
             surcharge = min_cart_value - cart_value
         return int(surcharge)
@@ -105,15 +104,11 @@ class FeeCalculator:
         return int(fee)
 
     def rush_hour_fee(self, time: str, rush_hours: config.RushHours) -> float:
-        multiplier = 0
-        # Get the time as datetime object from string
+        multiplier = 1
         parsed = parse(time)
         time_of_day = parsed.time()
         for rush_time in rush_hours:
             if parsed.weekday() == rush_time.day:
                 if time_of_day >= rush_time.start and time_of_day <= rush_time.end:
-                    # Multiply the fee with the chosen rush time fee
-                    multiplier += rush_time.fee
-        if multiplier == 0:
-            multiplier = 1
+                    multiplier = multiplier * rush_time.fee
         return float(multiplier)
