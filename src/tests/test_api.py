@@ -20,30 +20,94 @@ class TestApi(unittest.TestCase):
         self.assertEqual(response.json(), {"delivery_fee": 710})
 
     def test_get_request(self):
-        """GET request should not be allowed and the status code should be 405.
+        """GET request should not be allowed and the response status code should be 405.
         """
         response = self.client.get("/")
         self.assertEqual(response.status_code, 405)
 
     def test_put_request(self):
-        """PUT request should not be allowed and the status code should be 405.
+        """PUT request should not be allowed and the response status code should be 405.
         """
         response = self.client.put("/")
         self.assertEqual(response.status_code, 405)
 
-    def test_non_valid_data(self):
-        """Even when the JSON values are not the right type, the API works
-        """
-        example_delivery = {"cart_value": "790", "delivery_distance": "2235",
-                            "number_of_items": "4", "time": "2024-01-15T13:00:00Z"}
-        response = self.client.post("/", json=example_delivery)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"delivery_fee": 710})
-
-    def test_non_valid_data_error(self):
-        """When non-valid data is entered and it cannot be processed, API should return 422 error
+    def test_non_valid_data_error_cart_value_str(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
         """
         example_delivery = {"cart_value": "value", "delivery_distance": 2235,
                             "number_of_items": 4, "time": "2024-01-15T13:00:00Z"}
         response = self.client.post("/", json=example_delivery)
-        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Cart value must be a positive integer.")
+
+    def test_non_valid_data_error_number_of_items_str(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": "4", "time": "2024-01-15T13:00:00Z"}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Number of items must be an integer with a value over 1.")
+
+    def test_non_valid_data_error_number_of_items_zero(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": 0, "time": "2024-01-15T13:00:00Z"}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Number of items must be an integer with a value over 1.")
+
+    def test_non_valid_data_error_number_of_items_negative(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": -20, "time": "2024-01-15T13:00:00Z"}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Number of items must be an integer with a value over 1.")
+
+    def test_non_valid_data_error_time_not_string(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": 10, "time": 20240115130000}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Time must be string type in UTC, ISO 8601 format.")
+
+    def test_non_valid_data_error_time_month_does_not_exist(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": 10, "time": "2024-13-15T13:00:00Z"}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Time must be string type in UTC, ISO 8601 format.")
+
+    def test_non_valid_data_error_time_date_does_not_exist(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": 10, "time": "2024-02-30T13:00:00Z"}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Time must be string type in UTC, ISO 8601 format.")
+
+    def test_non_valid_data_error_time_hour_does_not_exist(self):
+        """When non-valid data is entered and it cannot be processed, 
+        API should return 400 error with a relevant error message.
+        """
+        example_delivery = {"cart_value": 500, "delivery_distance": 2235,
+                            "number_of_items": 10, "time": "2024-02-30T25:00:00Z"}
+        response = self.client.post("/", json=example_delivery)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), "Time must be string type in UTC, ISO 8601 format.")
+
