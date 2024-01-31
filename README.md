@@ -10,20 +10,6 @@ This repository contains my solution for the [Wolt Summer 2024 Engineering Inter
 
 - pip version 22.0.2 or higher
 
-### Development practices used:
-
-- Dependency management: [venv](https://docs.python.org/3/library/venv.html) was used to create virtual environment and dependency list was saved to requirements.txt.
-
-- Testing: Unit- and integration tests were created with pytest and they test the API via FastAPI's test client feature.
-
-- Configuration: No constants are used within the classes or functions, rather they are written in separate file, from which they are imported. This improves the application's maintainability. Tests are not dependent on the config file, so they won't break if constants are changed. Config file is validated before the program is run to avoid internal server errors caused by mistakes in config file.
-
-- Error handling: Custom errors were created with relevant messages if request body is not valid.
-
-- Documentation: Docstring and comments are used when needed and code is written with readability in mind.
-
-- Github workflow: On every push, tests are run to check health of the application.
-
 ### How to use
 
 
@@ -46,6 +32,20 @@ Generate coverage report with ```coverage run --branch -m pytest src && coverage
 - There is a separate test_config.py file for testing, so changes in development/production configuration file won't break the tests.
 
 - Configuration is validated, and if there are errors, the server won't start.
+
+### Development practices used:
+
+- Dependency management: [venv](https://docs.python.org/3/library/venv.html) was used to create virtual environment and dependency list was saved to requirements.txt.
+
+- Testing: Unit- and integration tests were created with pytest and they test the API via FastAPI's test client feature.
+
+- Configuration: No constants are used within the classes or functions, rather they are written in separate file, from which they are imported. This improves the application's maintainability. Tests are not dependent on the config file, so they won't break if constants are changed. Config file is validated before the program is run to avoid internal server errors caused by mistakes in config file.
+
+- Error handling: Custom errors were created with relevant messages if request body is not valid.
+
+- Documentation: Docstring and comments are used when needed and code is written with readability in mind.
+
+- Github workflow: On every push, tests are run to check health of the application.
 
 ### Usage Demo
 #### Correct request body
