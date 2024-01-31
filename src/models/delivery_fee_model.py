@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class Fee(BaseModel):
+class DeliveryFeeModel(BaseModel):
     delivery_fee: int

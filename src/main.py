@@ -1,11 +1,11 @@
 from fastapi import FastAPI, Request
 import uvicorn
 from fastapi.responses import JSONResponse
-from models.delivery import Delivery
+from models.order_model import OrderModel
 from services.fee_calculator import FeeCalculator
 from services.request_validator import DeliveryRequestValidator
 from services.config_validator import ConfigValidator
-from models.fee import Fee
+from models.delivery_fee_model import DeliveryFeeModel
 import config
 
 
@@ -25,8 +25,8 @@ def delivery_exception_handler(request: Request, exc: DeliveryValidatorException
     )
 
 
-@app.post("/", response_model=Fee)
-def index(delivery: dict) -> Fee:
+@app.post("/", response_model=DeliveryFeeModel)
+def index(delivery: dict) -> DeliveryFeeModel:
     """Endpoint to get the delivery fee. Valid JSON request body follows the format:
     {
         "cart_value": int,
@@ -41,11 +41,11 @@ def index(delivery: dict) -> Fee:
     request_validity = DeliveryRequestValidator().valid_delivery_request(delivery_request=delivery)
     if request_validity != "valid":
         raise DeliveryValidatorException(name=request_validity)
-    delivery_object = Delivery(**delivery)
+    order_model = OrderModel(**delivery)
 
-    delivery_fee = FeeCalculator().calculate_total_delivery_fee(response_object=delivery_object)
+    delivery_fee = FeeCalculator().calculate_total_delivery_fee(response_object=order_model)
 
-    return Fee(delivery_fee=delivery_fee)
+    return DeliveryFeeModel(delivery_fee=delivery_fee)
 
 
 if __name__ == "__main__":

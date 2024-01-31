@@ -1,7 +1,7 @@
 import unittest
 from datetime import time
 from settings import settings
-from models.delivery import Delivery
+from models.order_model import OrderModel
 from services.fee_calculator import FeeCalculator
 from config import RushHours
 
@@ -18,7 +18,7 @@ class TestFeeCalculatorTotalDeliveryFee(unittest.TestCase):
     def test_calculate_fee_valid_order(self):
         """Test the function with a valid delivery. Fee should be 7.10€
         """
-        delivery = Delivery(cart_value=790, delivery_distance=2235, number_of_items=4, time="2024-01-15T13:00:00Z")
+        delivery = OrderModel(cart_value=790, delivery_distance=2235, number_of_items=4, time="2024-01-15T13:00:00Z")
         fee = self.calculator.calculate_total_delivery_fee(delivery)
         self.assertEqual(fee, 710)
 
@@ -26,7 +26,7 @@ class TestFeeCalculatorTotalDeliveryFee(unittest.TestCase):
         """Test the total fee function with a delivery that is under the minimum total fee,
         to test that it is never under that.
         """
-        delivery = Delivery(cart_value=1000, delivery_distance=50, number_of_items=1, time="2024-01-15T13:00:00Z")
+        delivery = OrderModel(cart_value=1000, delivery_distance=50, number_of_items=1, time="2024-01-15T13:00:00Z")
         total_fee = self.calculator.calculate_total_delivery_fee(delivery)
         self.assertEqual(total_fee, 100)
 
@@ -34,7 +34,7 @@ class TestFeeCalculatorTotalDeliveryFee(unittest.TestCase):
         """Test the total fee function with a delivery that is over the maximum total fee,
         to test that it is never over that.
         """
-        delivery = Delivery(cart_value=1000, delivery_distance=50000, number_of_items=100, time="2024-01-15T13:00:00Z")
+        delivery = OrderModel(cart_value=1000, delivery_distance=50000, number_of_items=100, time="2024-01-15T13:00:00Z")
         total_fee = self.calculator.calculate_total_delivery_fee(delivery)
         self.assertEqual(total_fee, 1500)
 
@@ -42,7 +42,7 @@ class TestFeeCalculatorTotalDeliveryFee(unittest.TestCase):
         """Test the total fee function with a delivery that is over the minimum cart value for free delivery,
         to test that the fee is 0.
         """
-        delivery = Delivery(cart_value=20001, delivery_distance=1490, number_of_items=25, time="2024-01-15T13:00:00Z")
+        delivery = OrderModel(cart_value=20001, delivery_distance=1490, number_of_items=25, time="2024-01-15T13:00:00Z")
         total_fee = self.calculator.calculate_total_delivery_fee(delivery)
         self.assertEqual(total_fee, 0)
 
@@ -50,7 +50,7 @@ class TestFeeCalculatorTotalDeliveryFee(unittest.TestCase):
         """Test the total fee function with a delivery that is equal to the minimum cart value for free delivery,
         to test that the fee is 0.
         """
-        delivery = Delivery(cart_value=20000, delivery_distance=1490, number_of_items=25, time="2024-01-15T13:00:00Z")
+        delivery = OrderModel(cart_value=20000, delivery_distance=1490, number_of_items=25, time="2024-01-15T13:00:00Z")
         total_fee = self.calculator.calculate_total_delivery_fee(delivery)
         self.assertEqual(total_fee, 0)
 
@@ -58,7 +58,7 @@ class TestFeeCalculatorTotalDeliveryFee(unittest.TestCase):
         """Test the total fee function with a delivery that is equal to the minimum cart value for free delivery,
         to test that the fee is 0.
         """
-        delivery = Delivery(cart_value=19999, delivery_distance=3200, number_of_items=25, time="2024-01-15T13:00:00Z")
+        delivery = OrderModel(cart_value=19999, delivery_distance=3200, number_of_items=25, time="2024-01-15T13:00:00Z")
         total_fee = self.calculator.calculate_total_delivery_fee(delivery)
         self.assertEqual(total_fee, 1500)
 

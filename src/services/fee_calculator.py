@@ -2,7 +2,7 @@ import math
 from dateutil.parser import parse
 import config
 import test_config
-from models.delivery import Delivery
+from models.order_model import OrderModel
 from settings import settings
 
 
@@ -19,7 +19,7 @@ class FeeCalculator:
         else:
             self.config = config
 
-    def calculate_total_delivery_fee(self, response_object: Delivery) -> int:
+    def calculate_total_delivery_fee(self, response_object: OrderModel) -> int:
         """Main function to calculate the fee for the delivery.
         First, the minimum cart value surcharge is added.
         Second, the delivery distance surcharge is added.

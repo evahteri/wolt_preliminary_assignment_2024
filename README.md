@@ -2,7 +2,7 @@
 
 ## Delivery Fee Calculator API
 
-This repository contains my solution for the Wolt Summer 2024 Engineering Internship backend assignment. The application is written with Python (3.10.12), using FastAPI library. The API is fully configurable and tested with 96% test coverage, where the last 4% are trivial in terms of the function of the program. All inputs and outputs are validated to avoid errors in other apps that depend on this API.
+This repository contains my solution for the [Wolt Summer 2024 Engineering Internship backend assignment](https://github.com/woltapp/engineering-internship-2024). The application is written with Python (3.10.12), using FastAPI library. The API is fully configurable and tested with 96% test coverage, where the last 4% are trivial in terms of the function of the program. All inputs and outputs are validated to avoid errors in other apps that depend on this API.
 
 ### Requirements
 
