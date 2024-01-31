@@ -11,7 +11,7 @@ class RushHours(BaseModel):
 
 
 MINIMUM_CART_VALUE: int = 1000  # If the cart value is less than this, a small order surcharge is added to the delivery price (10€ = 1000).
-MINIMUM_DELIVERY_DISTANCE: int = 500  # The minimum delivery fee as meters.
+MINIMUM_DELIVERY_DISTANCE: int = 500  # The minimum delivery distance as meters.
 DELIVERY_FEE_FOR_THE_FIRST_KM: int = 200  # The delivery fee for the first km.
 ADDITIONAL_DISTANCE_AFTER_FIRST_KM: int = 500  # The distance the courier has to travel after the first km, delivery_fee_for_additional_distance value is added for every additional distance.
 DELIVERY_FEE_FOR_ADDITIONAL_DISTANCE: int = 100  # This is added to the delivery fee for every configured additional distance.

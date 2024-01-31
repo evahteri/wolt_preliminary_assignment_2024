@@ -10,7 +10,8 @@ class TestApi(unittest.TestCase):
         self.client = TestClient(app)
 
     def test_example_delivery(self):
-        """Example delivery from the assignment, delivery fee should be 7.10€,
+        """Example delivery from the assignment, response should be in json format 
+        including a delivery fee of 7.10€,
         and the status code should be 200.
         """
         example_delivery = {"cart_value": 790, "delivery_distance": 2235,
@@ -154,4 +155,3 @@ class TestApiTimeValidation(unittest.TestCase):
         response = self.client.post("/", json=example_delivery)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), "Time must be string type in UTC, ISO 8601 format.")
-
