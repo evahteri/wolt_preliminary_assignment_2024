@@ -6,9 +6,9 @@ This repository contains my solution for the Wolt Summer 2024 Engineering Intern
 
 ### Requirements
 
-- Python version 3.10 or higher
+- Python version 3.10.12 or higher
 
-- pip version 22 or higher
+- pip version 22.0.2 or higher
 
 ### Development practices used:
 

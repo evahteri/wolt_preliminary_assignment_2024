@@ -27,7 +27,7 @@ class ConfigValidator:
             self._error = "Error in config.py: Rush hours are not valid."
 
         return self._error
-    
+
     def is_positive_integer(self, value) -> bool:
         """Checks if the cart value is a positive integer.
         """
@@ -36,9 +36,10 @@ class ConfigValidator:
         if value < 0:
             return False
         return True
-    
+
     def validate_rush_hours(self, rush_hours: list) -> bool:
-        """Checks if the rush hours are valid. Only one rush hour can be active at a time.
+        """Checks if the rush hours are valid. The rush hour cannot end before
+        it starts and week cannot be negative or over 6.
         """
         if not isinstance(rush_hours, list):
             return False

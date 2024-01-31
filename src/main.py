@@ -8,18 +8,22 @@ from services.config_validator import ConfigValidator
 from models.fee import Fee
 import config
 
+
 class DeliveryValidatorException(Exception):
     def __init__(self, name: str):
         self.name = name
 
+
 app = FastAPI()
+
 
 @app.exception_handler(DeliveryValidatorException)
 def delivery_exception_handler(request: Request, exc: DeliveryValidatorException):
     return JSONResponse(
-        status_code = 400,
-        content = exc.name,
+        status_code=400,
+        content=exc.name,
     )
+
 
 @app.post("/", response_model=Fee)
 def index(delivery: dict) -> Fee:
@@ -37,11 +41,12 @@ def index(delivery: dict) -> Fee:
     request_validity = DeliveryRequestValidator().valid_delivery_request(delivery_request=delivery)
     if request_validity != "valid":
         raise DeliveryValidatorException(name=request_validity)
-    delivery = Delivery(**delivery)
+    delivery_object = Delivery(**delivery)
 
-    delivery_fee = FeeCalculator().calculate_total_delivery_fee(response_object=delivery)
+    delivery_fee = FeeCalculator().calculate_total_delivery_fee(response_object=delivery_object)
 
     return Fee(delivery_fee=delivery_fee)
+
 
 if __name__ == "__main__":
     config_validity = ConfigValidator().valid_config(config=config)

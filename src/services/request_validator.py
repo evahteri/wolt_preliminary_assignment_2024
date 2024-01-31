@@ -1,5 +1,6 @@
 import datetime
 
+
 class DeliveryRequestValidator:
     def __init__(self):
         self._error = "valid"
@@ -25,7 +26,7 @@ class DeliveryRequestValidator:
         if cart_value < 0:
             return False
         return True
-    
+
     def valid_delivery_distance(self, delivery_distance) -> bool:
         """Checks if the delivery distance is a positive integer.
         """
@@ -34,7 +35,7 @@ class DeliveryRequestValidator:
         if delivery_distance < 0:
             return False
         return True
-    
+
     def valid_number_of_items(self, number_of_items) -> bool:
         """Checks if the number of items is a positive integer.
         """
@@ -43,7 +44,7 @@ class DeliveryRequestValidator:
         if number_of_items < 1:
             return False
         return True
-        
+
     def valid_time(self, time) -> bool:
         """Checks if the time is in right format (UTC, ISO 8601)
         """
@@ -55,4 +56,3 @@ class DeliveryRequestValidator:
             return True
         except ValueError:
             return False
-
