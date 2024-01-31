@@ -53,3 +53,44 @@ This will generate a coverage report as well.
 - There is a separate test_config.py file for testing, so changes in development/production configuration file won't break the tests.
 
 - Configuration is validated, and if there are errors, the server won't start.
+
+### Usage Demo
+#### Correct request body
+The client sends a POST request with a JSON request body: 
+
+```
+Content-Type: application/json
+{"cart_value": 790, "delivery_distance": 2235, "number_of_items": 4, "time": "2024-01-15T13:00:00Z"}
+```
+
+Server responds with:
+```
+HTTP/1.1 200 OK
+date: Wed, 31 Jan 2024 10:51:49 GMT
+server: uvicorn
+content-length: 20
+content-type: application/json
+Connection: close
+
+{
+  "delivery_fee": 710
+}
+```
+#### Incorrect request body
+The client sends a POST request with a JSON request body with a time format that is not ISO 8601
+```
+Content-Type: application/json
+
+{"cart_value": 790, "delivery_distance": 2235, "number_of_items": 4, "time": "2024-01-01 12:00:00"}
+```
+Server responds with:
+```
+HTTP/1.1 400 Bad Request
+date: Wed, 31 Jan 2024 10:53:43 GMT
+server: uvicorn
+content-length: 51
+content-type: application/json
+Connection: close
+
+"Time must be string type in UTC, ISO 8601 format."
+```
