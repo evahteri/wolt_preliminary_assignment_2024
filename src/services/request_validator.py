@@ -50,7 +50,6 @@ class DeliveryRequestValidator:
         """
         if not isinstance(time, str):
             return False
-        print(time)
         try:
             datetime.datetime.strptime(time, "%Y-%m-%dT%H:%M:%SZ")
             return True
