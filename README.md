@@ -22,29 +22,22 @@ This repository contains my solution for the [Wolt Summer 2024 Engineering Inter
 
 - Documentation: Docstring and comments are used when needed and code is written with readability in mind.
 
-- Ease of use: Scripts for both starting the app and running automated tests.
-
 - Github workflow: On every push, tests are run to check health of the application.
 
 ### How to use
 
-Quick start: install needed dependencies and run the server with a provided script: 
-
-```start.sh```
-
-Or manually:
 
 - Install requirements by runnin ```pip install -r requirements.txt```
 
-- Run the server by running the ```main.py```
+- Run the server by running the main.py file in src folder ```python3 main.py```
 
 The API is now open at http://localhost:8000/
 
 ### Testing
 
-Run tests with ```test.sh```
+Run tests with ```pytest```
 
-This will generate a coverage report as well.
+Generate coverage report with ```coverage run --branch -m pytest src && coverage report -m```
 
 ### Configuration
 
